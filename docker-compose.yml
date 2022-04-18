@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  todo-list:
+    build:
+      dockerfile: ./docker/todo-list/Dockerfile
+      context: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - nats
+    networks:
+      - todo-app
+
+  todo-admin:
+    build:
+      dockerfile: ./docker/todo-admin/Dockerfile
+      context: .
+    ports:
+      - 8081:8081
+    depends_on:
+      - nats
+    networks:
+      - todo-app
+
+  nats:
+    image: nats
+    ports:
+      - 4222:4222
+    networks:
+      - todo-app
+
+networks:
+  todo-app:
+    external: true
+    name: todo-app
+    driver: bridge
